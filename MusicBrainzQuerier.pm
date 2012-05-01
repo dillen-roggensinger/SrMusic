@@ -5,16 +5,19 @@ use warnings;
 use HTTP::Request;
 use XML::Simple;
 
-#Usage: <type>,<value> i.e. artist, fred
+#Usage: <domain>,type>,<value>
+#Example: artist, alias, fred <= searches for the alias fred under artists
 #Returns: A wellformed query url
 #Description: Creates a query string for the MusicBrainz XML based REST database
 sub formulate_search_query {
-	if (scalar @_ != 2) {
+	if (scalar @_ != 3) {
+		print "Incorrect number of args\n";
 		return undef;
 	}
+	my $domain = shift;
 	my $type = shift;
 	my $value = shift;
-	return "http://www.musicbrainz.org/ws/2/artist/?query=$type:$value";
+	return "http://www.musicbrainz.org/ws/2/$domain/?query=$type:$value";
 }
 
 #Usage: <url>
@@ -37,16 +40,16 @@ sub execute_query {
 	}
 }
 
-#Usage: <artist name>
+#Usage: <url>
 #Returns: a hash of artist names to their information
 #Description: searches the provided artist name as an ALIAS (inorder to include and typos)
-sub search_artist {
+sub search {
 	if (scalar @_ != 1) {
 		return undef;
 	}
 	
-	my $url = formulate_search_query("alias", shift);
-	my $output = execute_query(shift);
+	my $url = shift;
+	my $output = execute_query($url);
 	
 	if (!defined($output)) {
 		return {};
