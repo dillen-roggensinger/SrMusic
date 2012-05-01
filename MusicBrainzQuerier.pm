@@ -5,8 +5,11 @@ use warnings;
 use HTTP::Request;
 use XML::Simple;
 
+#FOR REFERENCE
+#http://musicbrainz.org/doc/XML_Web_Service/Version_2
+
 #Usage: <domain>,type>,<value>
-#Example: artist, alias, fred <= searches for the alias fred under artists
+#Example: 'artist', 'alias', 'fred' <= searches for the alias fred under artists
 #Returns: A wellformed query url
 #Description: Creates a query string for the MusicBrainz XML based REST database
 sub formulate_search_query {
@@ -20,6 +23,10 @@ sub formulate_search_query {
 	return "http://www.musicbrainz.org/ws/2/$domain/?query=$type:$value";
 }
 
+#Usage: <domain>, <id>, <optional info>, <optional info>, ...
+#Example: 'release','67d43db6-80dd-4e3f-adf1-53912c35f8e3','labels','recordings' <= searches for the song Lola by The Kinks with labels and recordings as additional info
+#Returns: A wellformed query url
+#Description: Creates a query string for the MusicBrainz XML based REST database using the lookup functionality
 sub formulate_lookup_query {
 	if (scalar @_ < 2) {
 		print "Incorrect number of args\n";
