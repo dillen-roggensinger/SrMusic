@@ -8,7 +8,7 @@ use XML::Simple;
 #FOR REFERENCE
 #http://musicbrainz.org/doc/XML_Web_Service/Version_2
 
-#Usage: <domain>,type>,<value>
+#Usage: <domain>, <type>, <value>
 #Example: 'artist', 'alias', 'fred' <= searches for the alias fred under artists
 #Returns: A wellformed query url
 #Description: Creates a query string for the MusicBrainz XML based REST database
