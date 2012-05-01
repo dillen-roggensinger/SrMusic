@@ -20,6 +20,23 @@ sub formulate_search_query {
 	return "http://www.musicbrainz.org/ws/2/$domain/?query=$type:$value";
 }
 
+sub formulate_lookup_query {
+	if (scalar @_ < 2) {
+		print "Incorrect number of args\n";
+		return undef;
+	}
+	my $domain = shift;
+	my $id = shift;
+	my $url = "http://www.musicbrainz.org/ws/2/$domain/$id";
+	if (scalar @_ > 0) {
+		$url = "$url?inc=" . shift(@_);
+		foreach (@_) {
+			$url = "$url+$_"
+		}
+	}
+	return $url;
+}
+
 #Usage: <url>
 #Returns: the raw output of the HTTP request
 #Description: executes a HTTP request with the url provided
@@ -41,7 +58,7 @@ sub execute_query {
 }
 
 #Usage: <url>
-#Returns: a hash of artist names to their information
+#Returns: a hash of results to their details
 #Description: searches the provided artist name as an ALIAS (inorder to include and typos)
 sub search {
 	if (scalar @_ != 1) {
@@ -50,12 +67,14 @@ sub search {
 	
 	my $url = shift;
 	my $output = execute_query($url);
+	my $type;
 	
 	if (!defined($output)) {
 		return {};
 	}
-	if ($output =~ m/(<metadata.*?><.*?-list.*?>.*<\/.*?-list><\/metadata>)/) {
+	if ($output =~ m/(<metadata.*?><(.*?)-list.*?>.*<\/.*?-list><\/metadata>)/) {
 		$output = $1;
+		$type = $2;
 	} else {
 		print "Invalid query";
 		return undef;
@@ -64,8 +83,36 @@ sub search {
 	
 	my $xs = XML::Simple->new();
 	my $ref = $xs->XMLin("$output");
-	return $ref->{'artist-list'}->{'artist'};
+	return $ref->{"$type-list"}->{"$type"};
 }
 
+#Usage: <url>
+#Returns: a hash of the result to their details
+#Description: searches the provided artist name as an ALIAS (inorder to include and typos)
+sub lookup {
+	if (scalar @_ != 1) {
+		return undef;
+	}
+	
+	my $url = shift;
+	my $output = execute_query($url);
+	my $type;
+	
+	if (!defined($output)) {
+		return {};
+	}
+	if ($output =~ m/(<metadata.*?><(.*?) id.*<\/metadata>)/) {
+		$output = $1;
+		$type = $2;
+	} else {
+		print "Invalid query";
+		return {};
+	}
+	
+	
+	my $xs = XML::Simple->new();
+	my $ref = $xs->XMLin("$output");
+	return $ref->{"$type"};
+}
 
 1;
