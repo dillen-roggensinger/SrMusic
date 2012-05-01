@@ -54,7 +54,7 @@ sub search {
 	if (!defined($output)) {
 		return {};
 	}
-	if ($output =~ m/(<metadata.*?><artist-list.*?>.*<\/artist-list><\/metadata>)/) {
+	if ($output =~ m/(<metadata.*?><.*?-list.*?>.*<\/.*?-list><\/metadata>)/) {
 		$output = $1;
 	} else {
 		print "Invalid query";
