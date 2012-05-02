@@ -11,34 +11,52 @@ sub get_possible_artists {
 		return {};
 	}
 	my $artist = shift;
-	my $url = MusicBrainzQuerier::formulate_search_query('artist','alias',$artist);
-	my $ref = MusicBrainzQuerier::search($url);
+	my $offset = 0;
+	my $ref = {};
 	my $artists_and_ids = {};
-	foreach (keys %{$ref}){
-		$artists_and_ids->{$ref->{$_}->{'id'}}=$ref->{$_}->{'sort-name'};
-	}
+	do {	#Loop through all the offsets until no more results are found
+		my $url = MusicBrainzQuerier::formulate_search_query($offset, 'artist','alias',$artist);
+		$ref = MusicBrainzQuerier::search($url);
+		foreach (keys %{$ref}){
+			$artists_and_ids->{$ref->{$_}->{'id'}}=$ref->{$_}->{'sort-name'};
+		}
+		$offset += 25;
+	} while (scalar keys %$ref == 25);
+	
 	return $artists_and_ids;
 }
 
+#artist, song name, release year, album name
 sub get_possible_recordings {
 	if (scalar @_ != 1) {
 		print "Incorrect number of arguments\n";
 		return {};
 	}
 	my $name = shift;
-	my $url = MusicBrainzQuerier::formulate_search_query('recording','recording',$name,'type','single');
-	my $ref = MusicBrainzQuerier::search($url);
-	#print Dumper($ref);
 	my $recordings_and_ids = {};
-	print $recordings_and_ids;
-	foreach my $id (keys %$ref){
-		$recordings_and_ids->{$id} = {
-			'artist' => $ref->{$id}->{'artist-credit'}->{'name-credit'},
-			'title' => $ref->{$id}->{'title'},
-			'album' => $ref->{$id}->{'release-list'}->{'release'}->{'title'},
-			#'artist' => $ref->{$id}->{'artist-credit'}->{'name-credit'}->{'artist'}->{'sort-name'}
-		};
-	}
+	my $ref = {};
+	my $offset = 0;
+	
+	do {	#Loop through all the offsets until no more results are found
+		my $url = MusicBrainzQuerier::formulate_search_query($offset, 'recording','recording',$name);
+		$ref = MusicBrainzQuerier::search($url);
+		foreach my $id (keys %$ref){
+			$recordings_and_ids->{$id} = {
+				'artists' => [$ref->{$id}->{'artist-credit'}->{'name-credit'}],
+				'title' => $ref->{$id}->{'title'},
+				'album' => {
+					'country' => $ref->{$id}->{'release-list'}->{'release'}->{'country'},
+					'country' => $ref->{$id}->{'release-list'}->{'release'}->{'date'},
+					'type' => $ref->{$id}->{'release-list'}->{'release'}->{'release-group'}->{'type'},
+					'title' => $ref->{$id}->{'release-list'}->{'release'}->{'title'},
+					'id' => $ref->{$id}->{'release-list'}->{'release'}->{'id'},
+				}
+			};
+		}
+		$offset += 25;
+		print "Iteration $offset\n";
+	} while (scalar keys %$ref == 25);
+	
 	return $recordings_and_ids;
 }
 
