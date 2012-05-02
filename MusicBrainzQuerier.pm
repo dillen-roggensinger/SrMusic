@@ -5,6 +5,7 @@ use warnings;
 use HTTP::Request;
 use XML::Simple;
 use URI::Escape;
+use LWP::UserAgent;
 
 #FOR REFERENCE
 #http://musicbrainz.org/doc/XML_Web_Service/Version_2
@@ -23,7 +24,7 @@ sub formulate_search_query {
 	my $value = URI::Escape::uri_escape(shift);
 	my $url = "http://www.musicbrainz.org/ws/2/$domain/?query=$type:$value";
 	while (@_) {
-		$url = "$url&" . shift(@_) . ":" . URI::Escape::uri_escape(shift(@_));
+		$url = "$url%20AND%20" . shift(@_) . ":" . URI::Escape::uri_escape(shift(@_));
 	}
 	return $url;
 }
