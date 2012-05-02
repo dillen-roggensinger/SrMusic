@@ -4,23 +4,28 @@ use strict;
 use warnings;
 use HTTP::Request;
 use XML::Simple;
+use URI::Escape;
 
 #FOR REFERENCE
 #http://musicbrainz.org/doc/XML_Web_Service/Version_2
 
-#Usage: <domain>, <type>, <value>
+#Usage: <domain>, <type>, <value>, <type>, <value> ...
 #Example: 'artist', 'alias', 'fred' <= searches for the alias fred under artists
 #Returns: A wellformed query url
 #Description: Creates a query string for the MusicBrainz XML based REST database
 sub formulate_search_query {
-	if (scalar @_ != 3) {
+	if (scalar @_ < 3 or scalar @_ % 2 == 0) {
 		print "Incorrect number of args\n";
 		return undef;
 	}
 	my $domain = shift;
 	my $type = shift;
-	my $value = shift;
-	return "http://www.musicbrainz.org/ws/2/$domain/?query=$type:$value";
+	my $value = URI::Escape::uri_escape(shift);
+	my $url = "http://www.musicbrainz.org/ws/2/$domain/?query=$type:$value";
+	while (@_) {
+		$url = "$url&" . shift(@_) . ":" . URI::Escape::uri_escape(shift(@_));
+	}
+	return $url;
 }
 
 #Usage: <domain>, <id>, <optional info>, <optional info>, ...
