@@ -1,0 +1,38 @@
+<TMPL_INCLUDE NAME="header.html">
+
+	<!--
+	************************************************
+	-->
+
+	<form class="well form-inline" id="main-search" action="get_search.pl"method="get">
+		<fieldset id="comment-fieldset">
+			
+			<div class="control-group">
+				<label class="control-label" for="main-search-text">Search for:</label>
+				<div class="controls">
+					<input type="text" id="main-search-text" name="main-search-text" class="input-large search-query">
+				</div>
+			</div>
+
+			<div class="control-group">
+				<label class="control-label" for="main-search-by">Search By:</label>
+				<div class="controls">
+					<select id="main-search-by" name="main-search-by">
+						<option value="artist">Artist</option>
+						<option value="album">Album</option>
+						<option value="song">Song</option>
+					</select>
+				</div>
+			</div>
+
+			<button type="submit" class="btn btn-primary">
+				Search
+			</button>
+		</fieldset>
+	</form>
+
+	<!--
+	************************************************
+	-->
+
+	<TMPL_INCLUDE NAME="footer.html">
