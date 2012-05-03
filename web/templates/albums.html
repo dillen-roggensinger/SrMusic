@@ -1,0 +1,38 @@
+<TMPL_INCLUDE NAME="header.html">
+
+	<!--
+	************************************************
+	-->
+
+
+	<h3>Search Results for "<TMPL_VAR NAME=SEARCH_FOR>" in "<TMPL_VAR NAME=SEARCH_BY>"</h3>
+
+	<TMPL_LOOP NAME=SONG_INFO>
+		<div class="alert alert-info">
+			<p>
+				<strong>ALBUM TITLE:</strong> <TMPL_VAR NAME=ALBUMTITLE>
+			</p>
+			<p>
+				<strong>ALBUM ID:</strong> <TMPL_VAR NAME=ALBUMID>
+			</p>
+			<p>
+				<strong>ARTIST NAME:</strong> <TMPL_VAR NAME=ARTISTNAME>
+			</p>
+			<p>
+				<strong>ARTIST ID:</strong> <TMPL_VAR NAME=ARTISTID>
+			</p>
+			<p>
+				<strong>ALBUM TYPE:</strong> <TMPL_VAR NAME=ALBUMTYPE>
+			</p>
+			<p>
+				<strong>ALBUM SCORE:</strong> <TMPL_VAR NAME=ALBUMSCORE>
+			</p>
+		</div>
+	</TMPL_LOOP>
+	
+
+	<!--
+	************************************************
+	-->
+
+	<TMPL_INCLUDE NAME="footer.html">

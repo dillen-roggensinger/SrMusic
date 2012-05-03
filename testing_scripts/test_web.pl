@@ -22,12 +22,11 @@ sub artists_test {
 			}
 		);
 	}
-	
-	print Dumper([@artists]);
+
+	print Dumper( [@artists] );
 }
 
-
-sub recordings_test {
+sub songs_test {
 	my $ref;
 	$ref = QueryResultFormatter::get_possible_recordings('Party Rock');
 	my @songs;
@@ -37,34 +36,79 @@ sub recordings_test {
 		my $ALBUMTITLE;
 		my $ARTISTNAME;
 		my $ARTISTID;
-		if (defined($ref->{$id}{'album'}{'id'})) {
+		if ( defined( $ref->{$id}{'album'}{'id'} ) ) {
 			$ALBUMID = $ref->{$id}{'album'}{'id'};
-		} else {
+		}
+		else {
 			next;
 		}
-		if (defined($ref->{$id}{'album'}{'title'})) {
+		if ( defined( $ref->{$id}{'album'}{'title'} ) ) {
 			$ALBUMTITLE = $ref->{$id}{'album'}{'title'};
-		} else {
+		}
+		else {
 			next;
 		}
-		if (ref($ref->{$id}{'artists'}[0]) eq 'HASH') {
+		if ( ref( $ref->{$id}{'artists'}[0] ) eq 'HASH' ) {
 			$ARTISTNAME = $ref->{$id}{'artists'}[0]{'artist'}{'name'};
-			$ARTISTID = $ref->{$id}{'artists'}[0]{'artist'}{'id'};
-		} else {
+			$ARTISTID   = $ref->{$id}{'artists'}[0]{'artist'}{'id'};
+		}
+		else {
 			next;
 		}
 		my $SONGTITLE = $ref->{$id}{'title'};
 		my $SONGSCORE = $ref->{$id}{'ext:score'};
-		push(@songs,
+		push(
+			@songs,
 			{
-				SONGID => $SONGID,
-				ALBUMID => $ALBUMID,
+				SONGID     => $SONGID,
+				ALBUMID    => $ALBUMID,
 				ALBUMTITLE => $ALBUMTITLE,
 				ARTISTNAME => $ARTISTNAME,
-				ARTISTID => $ARTISTID,
-				SONGTITLE => $SONGTITLE,
-				SONGSCORE => $SONGSCORE,
+				ARTISTID   => $ARTISTID,
+				SONGTITLE  => $SONGTITLE,
+				SONGSCORE  => $SONGSCORE,
 			}
 		);
 	}
 }
+
+sub albums_test {
+	my $ref;
+	$ref = QueryResultFormatter::get_possible_albums('The Eagles');
+	my @songs;
+	foreach my $id ( keys %{$ref} ) {
+		my $ALBUMID = $id;
+		my $ARTISTNAME;
+		my $ARTISTID;
+		my $ALBUMTYPE;
+		if ( ref( $ref->{$id}{'artists'}[0] ) eq 'HASH' ) {
+			$ARTISTNAME = $ref->{$id}{'artists'}[0]{'artist'}{'name'};
+			$ARTISTID   = $ref->{$id}{'artists'}[0]{'artist'}{'id'};
+		}
+		else {
+			next;
+		}
+		my $ALBUMTITLE = $ref->{$id}{'title'};
+		my $ALBUMSCORE = $ref->{$id}{'ext:score'};
+		if (defined($ref->{$id}{'type'})) {
+			$ALBUMTYPE  = $ref->{$id}{'type'};
+		} 
+		else {
+			$ALBUMTYPE = "N/A";
+		}
+		push(
+			@songs,
+			{
+				ALBUMID    => $ALBUMID,
+				ALBUMTITLE => $ALBUMTITLE,
+				ARTISTNAME => $ARTISTNAME,
+				ARTISTID   => $ARTISTID,
+				ALBUMSCORE => $ALBUMSCORE,
+				ALBUMTYPE  => $ALBUMTYPE,
+			}
+		);
+	}
+	print Dumper(@songs);
+}
+
+albums_test();

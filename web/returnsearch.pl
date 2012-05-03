@@ -39,15 +39,13 @@ sub artist {
 }
 
 sub song {
-	my $ref;
 	( my $search_for, my $search_by ) = @_;
-	QueryResultFormatter::get_possible_recordings($search_for);
 	my $template =
 	  HTML::Template->new( filename => 'templates/songs.html' );
 	$template->param( SEARCH_FOR => $search_for );
 	$template->param( SEARCH_BY  => $search_by );
 
-	$ref = QueryResultFormatter::get_possible_recordings('Party Rock');
+	my $ref = QueryResultFormatter::get_possible_recordings($search_for);
 	my @songs;
 	foreach my $id ( keys %{$ref} ) {
 		my $SONGID = $id;
@@ -95,23 +93,48 @@ sub song {
 }
 
 sub album {
-	my $ref;
 	( my $search_for, my $search_by ) = @_;
-	QueryResultFormatter::get_possible_albums($search_for);
 	my $template =
-	  HTML::Template->new( filename => 'templates/returnsearch.html' );
+	  HTML::Template->new( filename => 'templates/albums.html' );
 	$template->param( SEARCH_FOR => $search_for );
 	$template->param( SEARCH_BY  => $search_by );
-	$template->param(
-		SONG_INFO => [
-			{ ARTIST => 'dillen', ALBUM => 'sucks', SONG => 'FUCK MY NUTS' },
+	
+	my $ref = 	QueryResultFormatter::get_possible_albums($search_for);
+	my @albums;
+	foreach my $id ( keys %{$ref} ) {
+		my $ALBUMID = $id;
+		my $ARTISTNAME;
+		my $ARTISTID;
+		my $ALBUMTYPE;
+		if ( ref( $ref->{$id}{'artists'}[0] ) eq 'HASH' ) {
+			$ARTISTNAME = $ref->{$id}{'artists'}[0]{'artist'}{'name'};
+			$ARTISTID   = $ref->{$id}{'artists'}[0]{'artist'}{'id'};
+		}
+		else {
+			next;
+		}
+		my $ALBUMTITLE = $ref->{$id}{'title'};
+		my $ALBUMSCORE = $ref->{$id}{'ext:score'};
+		if (defined($ref->{$id}{'type'})) {
+			$ALBUMTYPE  = $ref->{$id}{'type'};
+		} 
+		else {
+			$ALBUMTYPE = "N/A";
+		}
+		push(
+			@albums,
 			{
-				ARTIST => 'Terrance',
-				ALBUM  => 'greatest hits',
-				SONG   => 'Fuck you'
-			},
-		]
-	);
+				ALBUMID    => $ALBUMID,
+				ALBUMTITLE => $ALBUMTITLE,
+				ARTISTNAME => $ARTISTNAME,
+				ARTISTID   => $ARTISTID,
+				ALBUMSCORE => $ALBUMSCORE,
+				ALBUMTYPE  => $ALBUMTYPE,
+			}
+		);
+	}
+	
+	$template->param(SONG_INFO => [@albums]);
 
 	print "Content-Type: text/html\n\n", $template->output;
 }
