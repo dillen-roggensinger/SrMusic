@@ -32,8 +32,10 @@ sub artist {
 			}
 		);
 	}
+	
+	my @sorted =  sort { $b->{SCORE} <=> $a->{SCORE} } @artists;
 
-	$template->param( SONG_INFO => [@artists] );
+	$template->param( SONG_INFO => [@sorted] );
 
 	print "Content-Type: text/html\n\n", $template->output;
 }
@@ -87,7 +89,10 @@ sub song {
 			}
 		);
 	}
-	$template->param( SONG_INFO => [@songs] );
+	
+	my @sorted =  sort { $b->{SONGSCORE} <=> $a->{SONGSCORE} } @songs;
+	
+	$template->param( SONG_INFO => [@sorted] );
 
 	print "Content-Type: text/html\n\n", $template->output;
 }
@@ -134,7 +139,9 @@ sub album {
 		);
 	}
 	
-	$template->param(SONG_INFO => [@albums]);
+	my @sorted =  sort { $b->{ALBUMSCORE} <=> $a->{ALBUMSCORE} } @albums;
+	
+	$template->param(SONG_INFO => [@sorted]);
 
 	print "Content-Type: text/html\n\n", $template->output;
 }
