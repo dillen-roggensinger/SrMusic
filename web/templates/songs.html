@@ -33,6 +33,15 @@
 		</div>
 	</TMPL_LOOP>
 	
+	<form action="returnsearch.pl" method="get">
+		<input type="hidden" name="main-search-text" value="<TMPL_VAR NAME=SEARCH_FOR>"/>
+		<input type="hidden" name="main-search-by" value="<TMPL_VAR NAME=SEARCH_BY>"/>
+		<input type="hidden" name="more" value="<TMPL_VAR NAME=MORE>"/>
+		<button type="submit" class="btn btn-primary">
+			More Results
+		</button>
+	</form>
+	
 
 	<!--
 	************************************************

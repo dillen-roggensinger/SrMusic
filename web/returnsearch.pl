@@ -12,13 +12,19 @@ use QueryResultFormatter;
 
 sub artist {
 	my $ref;
-	( my $search_for, my $search_by ) = @_;
-	$ref = QueryResultFormatter::get_possible_artists($search_for);
+	( my $search_for, my $search_by, my $more) = @_;
+	$ref = QueryResultFormatter::get_possible_artists($search_for, $more);
+	
+	 if (!keys $ref) {
+	 	Helper::error('Null Results');
+	 	return;
+	 }
 
 	my $template = HTML::Template->new( filename => 'templates/artist.html' );
 
 	$template->param( SEARCH_FOR => $search_for );
 	$template->param( SEARCH_BY  => $search_by );
+	$template->param( MORE       => ($more + 100));
 
 	my @artists;
 
@@ -41,13 +47,20 @@ sub artist {
 }
 
 sub song {
-	( my $search_for, my $search_by ) = @_;
+	( my $search_for, my $search_by, my $more) = @_;
 	my $template =
 	  HTML::Template->new( filename => 'templates/songs.html' );
 	$template->param( SEARCH_FOR => $search_for );
 	$template->param( SEARCH_BY  => $search_by );
+	$template->param( MORE       => ($more + 100) );
 
-	my $ref = QueryResultFormatter::get_possible_recordings($search_for);
+	my $ref = QueryResultFormatter::get_possible_recordings($search_for, $more);
+	
+	if (!keys $ref) {
+	 	Helper::error('Null Results');
+	 	return;
+	 }
+	
 	my @songs;
 	foreach my $id ( keys %{$ref} ) {
 		my $SONGID = $id;
@@ -98,13 +111,20 @@ sub song {
 }
 
 sub album {
-	( my $search_for, my $search_by ) = @_;
+	( my $search_for, my $search_by, my $more) = @_;
 	my $template =
 	  HTML::Template->new( filename => 'templates/albums.html' );
 	$template->param( SEARCH_FOR => $search_for );
 	$template->param( SEARCH_BY  => $search_by );
+	$template->param( MORE       => ($more + 100) );
 	
-	my $ref = 	QueryResultFormatter::get_possible_albums($search_for);
+	my $ref = 	QueryResultFormatter::get_possible_albums($search_for, $more);
+	
+	if (!keys $ref) {
+	 	Helper::error('Null Results');
+	 	return;
+	 }
+	
 	my @albums;
 	foreach my $id ( keys %{$ref} ) {
 		my $ALBUMID = $id;
@@ -147,16 +167,16 @@ sub album {
 }
 
 sub returnSearch {
-	( my $search_for, my $search_by ) = @_;
+	( my $search_for, my $search_by, my $more) = @_;
 	my $ref;
 	if ( $search_by eq "artist" ) {
-		artist( $search_for, $search_by );
+		artist( $search_for, $search_by, $more);
 	}
 	elsif ( $search_by eq "song" ) {
-		song( $search_for, $search_by );
+		song( $search_for, $search_by, $more);
 	}
 	else {    #Default to Album
-		album( $search_for, $search_by );
+		album( $search_for, $search_by, $more);
 	}
 
 }
@@ -164,10 +184,11 @@ sub returnSearch {
 my $query      = new CGI;
 my $search_for = $query->param("main-search-text");
 my $search_by  = $query->param("main-search-by");
+my $more       = $query->param("more");
 
 if ( $search_for eq "" || $search_by eq "" ) {
 	Helper::error("No Parameters Set in CGI");
 }
 else {
-	returnSearch( $search_for, $search_by );
+	returnSearch( $search_for, $search_by, $more);
 }
