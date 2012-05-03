@@ -6,27 +6,29 @@
 
 
 	<h3>Search Results for "<TMPL_VAR NAME=SEARCH_FOR>" in "<TMPL_VAR NAME=SEARCH_BY>"</h3>
-
+	<br />
 	<TMPL_LOOP NAME=SONG_INFO>
-		<div class="alert alert-info">
-			<p>
-				<strong>ALBUM TITLE:</strong> <TMPL_VAR NAME=ALBUMTITLE>
-			</p>
-			<p>
-				<strong>ALBUM ID:</strong> <TMPL_VAR NAME=ALBUMID>
-			</p>
-			<p>
-				<strong>ARTIST NAME:</strong> <TMPL_VAR NAME=ARTISTNAME>
-			</p>
-			<p>
-				<strong>ARTIST ID:</strong> <TMPL_VAR NAME=ARTISTID>
-			</p>
-			<p>
-				<strong>ALBUM TYPE:</strong> <TMPL_VAR NAME=ALBUMTYPE>
-			</p>
-			<p>
-				<strong>ALBUM SCORE:</strong> <TMPL_VAR NAME=ALBUMSCORE>
-			</p>
+		<div class="alert alert-info" onclick="javascript:document.forms[0].submit()">
+			<form action="albumqueue.pl" method="get">
+				<div class="row">
+					<div class="span7">
+						<strong>ALBUM TITLE: </strong><TMPL_VAR NAME=ALBUMTITLE>
+					</div>
+					<div class="span3">
+						<strong>ALBUM TYPE: </strong><TMPL_VAR NAME=ALBUMTYPE>
+					</div>
+				</div>
+				<div class="row">
+					<div class="span7">
+						<strong>ARTIST NAME: </strong><TMPL_VAR NAME=ARTISTNAME>
+					</div>
+					<div class="span3">
+						<strong>RELEVANCE: </strong><TMPL_VAR NAME=ALBUMSCORE>%
+					</div>
+				</div>
+				<input type="hidden" name="albumid" value="<TMPL_VAR NAME=ALBUMID>"/>
+				<input type="hidden" name="artistid" value="<TMPL_VAR NAME=ARTISTID>"/>
+			</form>
 		</div>
 	</TMPL_LOOP>
 	
