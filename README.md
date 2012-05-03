@@ -10,3 +10,4 @@ URI::Escape;
 LWP::UserAgent;
 HTML::Template
 Data::Dumper
+CGI

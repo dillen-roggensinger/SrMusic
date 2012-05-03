@@ -5,14 +5,14 @@ use strict;
 use MusicBrainzQuerier;
 use Data::Dumper;
 
-#Usage: <artist> <OPTIONAL: starting offset>
-#Example: fred, 100	<= Searches for the artist fred with a max of a 100 results, starting at the 101st result
+#Usage: <recording> <OPTIONAL: starting offset> <OPTIONAL: max>
+#Example: fred, 100, 200	<= Searches for the artist fred with a max of a 200 results, starting at the 101st result
 #Returns: Hash of these:
 #			id => {
 #				'sort-name' =>
 #				'ext:score' =>
 #			}
-#Description: Gets a 100 results that match the search
+#Description: Gets a 100 or <max> results that match the search. Max must be a multiple of 100.
 sub get_possible_artists {
 	if (scalar @_ < 1) {
 		print "Incorrect number of arguments\n";
@@ -20,12 +20,17 @@ sub get_possible_artists {
 	}
 	my $artist = shift;
 	my $offset = shift;
+	my $max = shift;
+	my $ref = {};
+	my $artists_and_ids = {};
 	if (!defined $offset) {
 		$offset = 0;
 	}
-	my $max = $offset + 100;
-	my $ref = {};
-	my $artists_and_ids = {};
+	if (!defined $max) {
+		$max = $offset + 100;
+	} else {
+		$max = $offset + $max;
+	}
 	do {	#Loop through all the offsets until no more results are found
 		my $url = MusicBrainzQuerier::formulate_search_query($offset, 'artist', 'alias', $artist);
 		$ref = MusicBrainzQuerier::search($url);
@@ -35,14 +40,14 @@ sub get_possible_artists {
 				'ext:score' => $ref->{$_}->{'ext:score'} 
 			};
 		}
-		$offset += 25;
-	} while (scalar keys %$ref == 25 && $offset < $max);
+		$offset += 100;
+	} while (scalar keys %$ref == 100 && $offset < $max);
 	
 	return $artists_and_ids;
 }
 
-#Usage: <recording> <OPTIONAL: starting offset>
-#Example: fred, 100	<= Searches for the artist fred with a max of a 100 results, starting at the 101st result
+#Usage: <recording> <OPTIONAL: starting offset> <OPTIONAL: max>
+#Example: fred, 100, 200	<= Searches for the recording fred with a max of a 200 results, starting at the 101st result
 #Returns: Hash of these:
 #			'id' => {
 #				'album' => {
@@ -70,7 +75,7 @@ sub get_possible_artists {
 #				'title' =>
 #				'ext:score' =>
 #			}
-#Description: Gets a 100 results that match the search
+#Description: Gets a 100 or <max> results that match the search. Max must be a multiple of 100.
 sub get_possible_recordings {
 	if (scalar @_ < 1) {
 		print "Incorrect number of arguments\n";
@@ -78,12 +83,17 @@ sub get_possible_recordings {
 	}
 	my $name = shift;
 	my $offset = shift;
+	my $max = shift;
 	my $recordings_and_ids = {};
 	my $ref = {};
 	if (!defined $offset) {
 		$offset = 0;
 	}
-	my $max = $offset + 100;
+	if (!defined $max) {
+		$max = $offset + 100;
+	} else {
+		$max = $offset + $max;
+	}
 	do {	#Loop through all the offsets until no more results are found
 		my $url = MusicBrainzQuerier::formulate_search_query($offset, 'recording','recording',$name);
 		$ref = MusicBrainzQuerier::search($url);
@@ -101,14 +111,14 @@ sub get_possible_recordings {
 				'ext:score' => $ref->{$id}->{'ext:score'}
 			};
 		}
-		$offset += 25;
-	} while (scalar keys %$ref == 25 && $offset < $max);
+		$offset += 100;
+	} while (scalar keys %$ref == 100 && $offset < $max);
 	
 	return $recordings_and_ids;
 }
 
-#Usage: <recording> <OPTIONAL: starting offset>
-#Example: fred, 100	<= Searches for the artist fred with a max of a 100 results, starting at the 101st result
+#Usage: <album> <OPTIONAL: starting offset> <OPTIONAL: max>
+#Example: fred, 100, 200 <= Searches for the album fred with a max of a 200 results, starting at the 101st result
 #Returns: Hash of these:
 #			'id' => {
 #				'type' =>
@@ -131,7 +141,7 @@ sub get_possible_recordings {
 #				'title' =>
 #				'ext:score' =>
 #			}
-#Description: Gets a 100 results that match the search
+#Description: Gets a 100 or <max> results that match the search. Max must be a multiple of 100.
 sub get_possible_albums {
 	if (scalar @_ < 1) {
 		print "Incorrect number of arguments\n";
@@ -139,12 +149,17 @@ sub get_possible_albums {
 	}
 	my $name = shift;
 	my $offset = shift;
+	my $max = shift;
 	my $recordings_and_ids = {};
 	my $ref = {};
 	if (!defined $offset) {
 		$offset = 0;
 	}
-	my $max = $offset + 100;
+	if (!defined $max) {
+		$max = $offset + 100;
+	} else {
+		$max = $offset + $max;
+	}
 	do {	#Loop through all the offsets until no more results are found
 		my $url = MusicBrainzQuerier::formulate_search_query($offset, 'release-group','release-group',$name);
 		$ref = MusicBrainzQuerier::search($url);
@@ -156,8 +171,9 @@ sub get_possible_albums {
 				'type' => $ref->{$id}->{'type'}
 			};
 		}
-		$offset += 25;
-	} while (scalar keys %$ref == 25 && $offset < $max);
+		$offset += 100;
+		print "Iteration $offset\n";
+	} while (scalar keys %$ref == 100 && $offset < $max);
 	
 	return $recordings_and_ids;
 }
