@@ -172,7 +172,7 @@ sub get_possible_albums {
 			};
 		}
 		$offset += 100;
-		print "Iteration $offset\n";
+		#print "Iteration $offset\n";
 	} while (scalar keys %$ref == 100 && $offset < $max);
 	
 	return $recordings_and_ids;
