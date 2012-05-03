@@ -15,7 +15,6 @@ use Data::Dumper;
 #Description: Gets a 100 or <max> results that match the search. Max must be a multiple of 100.
 sub get_possible_artists {
 	if (scalar @_ < 1) {
-		print "Incorrect number of arguments\n";
 		return {};
 	}
 	my $artist = shift;
@@ -78,7 +77,6 @@ sub get_possible_artists {
 #Description: Gets a 100 or <max> results that match the search. Max must be a multiple of 100.
 sub get_possible_recordings {
 	if (scalar @_ < 1) {
-		print "Incorrect number of arguments\n";
 		return {};
 	}
 	my $name = shift;
@@ -144,7 +142,6 @@ sub get_possible_recordings {
 #Description: Gets a 100 or <max> results that match the search. Max must be a multiple of 100.
 sub get_possible_albums {
 	if (scalar @_ < 1) {
-		print "Incorrect number of arguments\n";
 		return {};
 	}
 	my $name = shift;
@@ -162,7 +159,6 @@ sub get_possible_albums {
 	}
 	do {	#Loop through all the offsets until no more results are found
 		my $url = MusicBrainzQuerier::formulate_search_query($offset, 'release-group','release-group',$name,'type','album|compilation|soundtrack|live');
-		print $url;
 		$ref = MusicBrainzQuerier::search($url);
 		foreach my $id (keys %$ref){
 			$recordings_and_ids->{$id} = {
@@ -173,7 +169,6 @@ sub get_possible_albums {
 			};
 		}
 		$offset += 100;
-		#print "Iteration $offset\n";
 	} while (scalar keys %$ref == 100 && $offset < $max);
 	
 	return $recordings_and_ids;

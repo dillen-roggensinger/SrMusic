@@ -16,7 +16,6 @@ use LWP::UserAgent;
 #Description: Creates a query string for the MusicBrainz XML based REST database
 sub formulate_search_query {
 	if (scalar @_ < 4 or scalar @_ % 2 != 0) {
-		print "Incorrect number of args\n";
 		return undef;
 	}
 	my $offset = shift;
@@ -37,7 +36,6 @@ sub formulate_search_query {
 #Description: Creates a query string for the MusicBrainz XML based REST database using the lookup functionality
 sub formulate_lookup_query {
 	if (scalar @_ < 2) {
-		print "Incorrect number of args\n";
 		return undef;
 	}
 	my $domain = shift;
@@ -67,7 +65,6 @@ sub execute_query {
 	if ($res->is_success) {
 		return $res->decoded_content;
 	} else {
-		print STDERR $res->status_line, "<br>";
 		return undef;
 	}
 }
@@ -91,7 +88,6 @@ sub search {
 		$output = $1;
 		$type = $2;
 	} else {
-		print "Invalid query";
 		return undef;
 	}
 	
@@ -121,7 +117,6 @@ sub lookup {
 		$output = $1;
 		$type = $2;
 	} else {
-		print "Invalid query";
 		return {};
 	}
 	
