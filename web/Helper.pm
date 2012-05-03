@@ -3,10 +3,6 @@ package Helper;
 use warnings;
 use strict;
 
-#SrMusic Project
-#Spring 2012
-#author @epkatz
-
 
 
 sub error {

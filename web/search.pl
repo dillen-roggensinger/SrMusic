@@ -2,10 +2,7 @@
 use warnings;
 use strict;
 
-#SrMusic Project
-#Spring 2012
-#author @epkatz
-
+use CGI::Carp qw(fatalsToBrowser);
 use HTML::Template;
 
 my $template = HTML::Template->new( filename => 'templates/search.html' );

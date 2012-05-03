@@ -1,0 +1,29 @@
+<TMPL_INCLUDE NAME="header.html">
+
+	<!--
+	************************************************
+	-->
+
+
+	<h3>Search Results for "<TMPL_VAR NAME=SEARCH_FOR>" in "<TMPL_VAR NAME=SEARCH_BY>"</h3>
+
+	<TMPL_LOOP NAME=SONG_INFO>
+		<div class="alert alert-info">
+			<p>
+				<strong>NAME:</strong>: <TMPL_VAR NAME=SORTNAME>
+			</p>
+			<p>
+				 <strong>ID:</strong> <TMPL_VAR NAME=ID>
+			</p>
+			<p>
+				<strong>SCORE</strong> <TMPL_VAR NAME=SCORE>
+			</p>
+		</div>
+	</TMPL_LOOP>
+	
+
+	<!--
+	************************************************
+	-->
+
+	<TMPL_INCLUDE NAME="footer.html">
