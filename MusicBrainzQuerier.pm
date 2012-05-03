@@ -25,7 +25,7 @@ sub formulate_search_query {
 	my $value = URI::Escape::uri_escape(shift);
 	my $url = "http://www.musicbrainz.org/ws/2/$domain/?query=$type:$value";
 	while (@_) {
-		$url = "$url%20AND%20" . shift(@_) . ":" . URI::Escape::uri_escape(shift(@_));
+		$url = "$url%20and%20" . shift(@_) . ":" . shift(@_);
 	}
 	$url = $url . "&offset=$offset&limit=100";
 	return $url;
