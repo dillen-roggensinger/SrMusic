@@ -27,7 +27,7 @@ sub formulate_search_query {
 	while (@_) {
 		$url = "$url%20AND%20" . shift(@_) . ":" . URI::Escape::uri_escape(shift(@_));
 	}
-	$url = $url . "&offset=$offset";
+	$url = $url . "&offset=$offset&limit=100";
 	return $url;
 }
 
