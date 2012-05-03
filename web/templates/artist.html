@@ -8,8 +8,8 @@
 	
 	<br />
 	<TMPL_LOOP NAME=SONG_INFO>
-		<div class="alert alert-info" onclick="javascript:document.forms[0].submit()">
-			<form action="artistqueue.pl" method="get">
+		<div class="alert alert-info" onclick="javascript:document.getElementById('<TMPL_VAR NAME=ID>').submit();">
+			<form action="artistqueue.pl" method="get" id="<TMPL_VAR NAME=ID>">
 				<div class="row">
 					<div class="span6">
 						<strong>NAME: </strong><TMPL_VAR NAME=SORTNAME>

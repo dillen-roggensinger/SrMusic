@@ -8,8 +8,8 @@
 	<h3>Search Results for "<TMPL_VAR NAME=SEARCH_FOR>" in "<TMPL_VAR NAME=SEARCH_BY>"</h3>
 	<br />
 	<TMPL_LOOP NAME=SONG_INFO>
-		<div class="alert alert-info" onclick="javascript:document.forms[0].submit()">
-			<form action="songqueue.pl" method="get">
+		<div class="alert alert-info" onclick="javascript:document.getElementById('<TMPL_VAR NAME=SONGID>').submit();">
+			<form action="songqueue.pl" method="get" id="<TMPL_VAR NAME=SONGID>">
 				<div class="row">
 					<div class="span5">
 						<strong>SONG TITLE: </strong><TMPL_VAR NAME=SONGTITLE>
