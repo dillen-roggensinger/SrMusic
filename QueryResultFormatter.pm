@@ -162,6 +162,7 @@ sub get_possible_albums {
 	}
 	do {	#Loop through all the offsets until no more results are found
 		my $url = MusicBrainzQuerier::formulate_search_query($offset, 'release-group','release-group',$name,'type','album|compilation|soundtrack|live');
+		print $url;
 		$ref = MusicBrainzQuerier::search($url);
 		foreach my $id (keys %$ref){
 			$recordings_and_ids->{$id} = {
