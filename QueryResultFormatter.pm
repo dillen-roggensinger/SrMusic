@@ -175,6 +175,10 @@ sub get_possible_albums {
 	return $recordings_and_ids;
 }
 
+#Usage: <domain> <recording id>
+#Example: 'recording' d0bd2a62-5dd8-49bf-ae51-8872a49184c0 <= Layla by Eric Clapton
+#Return: <release-group id>
+#Description: Gets the release-group id, given a domain and id
 sub get_artist {
 	if (scalar @_ != 2) {
 		return {};
@@ -187,6 +191,15 @@ sub get_artist {
 	return $ref->{'id'};
 }
 
+#Usage: <artist id>
+#Example: 618b6900-0618-4f1e-b835-bccb17f84294 <= Eric Clapton
+#Return:
+#			id => {
+#				first-release-date =>
+#				type =>
+#				title =>
+#			}
+#Description: Gets all the release groups given an artist id
 sub get_albums {
 	if (scalar @_ < 1) {
 		return {};
@@ -202,6 +215,10 @@ sub get_albums {
 	return $ref;
 }
 
+#Usage: <release-group id>
+#Example: 02c2b0c7-065d-38b4-8ac0-3391839f2418 <= Eric Clapton's Slow Hand
+#Return: <release id>
+#Description: Gets the release id, given a release group
 sub get_release {
 	if (scalar @_ < 1) {
 		return {};
@@ -217,6 +234,14 @@ sub get_release {
 	}
 }
 
+#Usage: <release-group id>
+#Example: 02c2b0c7-065d-38b4-8ac0-3391839f2418 <= Eric Clapton's Slow Hand
+#Return:
+#			id => {
+#				length =>
+#				title =>
+#			}
+#Description: Gets all the recordings in a release group
 sub get_songs {
 	if (scalar @_ < 1) {
 		return {};
