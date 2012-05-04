@@ -284,7 +284,7 @@ sub get_artists {
 	#Just take one of the releases, they should all have the same amount of content
 	if (defined $ref->{'id'}) {	#Single result
 		return {
-			$ref->{'id'} => $ref
+			$ref->{'name'} => $ref
 		};
 	}
 	return $ref;
