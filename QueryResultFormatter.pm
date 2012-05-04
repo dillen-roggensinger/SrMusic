@@ -95,7 +95,6 @@ sub get_possible_recordings {
 	do {	#Loop through all the offsets until no more results are found
 		my $url = MusicBrainzQuerier::formulate_search_query($offset, 'recording','recording',$name);
 		$ref = MusicBrainzQuerier::search($url);
-		print $url;
 		foreach my $id (keys %$ref){
 			$recordings_and_ids->{$id} = {
 				'artists' => [$ref->{$id}->{'artist-credit'}->{'name-credit'}],
@@ -229,7 +228,10 @@ sub get_release {
 	my $ref = MusicBrainzQuerier::search($url);
 	
 	#Just take one of the releases, they should all have the same amount of content
-	foreach (keys %$ref) {
+	if (defined $ref->{'id'}) {	#Single result
+		return $ref->{'id'};
+	}
+	foreach (keys %$ref) {	#Multiple results
 		return $_;
 	}
 }
@@ -254,7 +256,6 @@ sub get_songs {
 
 	$id = get_release($id);
 	my $url = MusicBrainzQuerier::formulate_browse_query(0, 'recording', 'release', $id);
-	print "$url\n";
 	my $ref = MusicBrainzQuerier::search($url);
 	return $ref;
 }
