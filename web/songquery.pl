@@ -10,37 +10,35 @@ use lib "../";
 use Helper;
 use QueryResultFormatter;
 
-sub artist {
+sub songs {
 	(my $search_for, my $name) = (@_);
 	
 	my $ref;
-	my @albums;
+	my @songs;
 	
-	$ref = QueryResultFormatter::get_albums($search_for);
+	$ref = QueryResultFormatter::get_songs($search_for);
 
 	if ( !keys %{$ref} ) {
 		Helper::error('Null Results');
 		return;
 	}
 	my $template =
-	  HTML::Template->new( filename => 'templates/artists_to_albums.html' );
+	  HTML::Template->new( filename => 'templates/albums_to_songs.html' );
 
-	$template->param( SEARCH_FOR => $name );	
+	$template->param( SEARCH_FOR => $name );
 
 	foreach my $id ( keys %{$ref} ) {
 		push(
-			@albums,
+			@songs,
 			{
-				ALBUMID     => $id,
-				RELEASEDATE => $ref->{$id}{'first-release-date'},
-				ALBUMTYPE   => $ref->{$id}{'type'},
-				ALBUMTITLE  => $ref->{$id}{'title'},
+				SONGID     => $id,
+				LENGTH => $ref->{$id}{'length'},
+				SONGTITLE  => $ref->{$id}{'title'},
 			}
 		);
 	}
 
-	$template->param( SONG_INFO => [@albums] );
-	
+	$template->param( SONG_INFO => [@songs] );
 	print "Content-Type: text/html\n\n", $template->output;
 }
 
@@ -51,5 +49,5 @@ if ( $search_for eq "" ) {
 	Helper::error("No Parameters Set in CGI");
 }
 else {
-	artist($search_for, $name);
+	songs($search_for, $name);
 }
