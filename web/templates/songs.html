@@ -9,7 +9,7 @@
 	<br />
 	<TMPL_LOOP NAME=SONG_INFO>
 		<div class="alert alert-info" onclick="javascript:document.getElementById('<TMPL_VAR NAME=SONGID>').submit();">
-			<form action="songqueue.pl" method="get" id="<TMPL_VAR NAME=SONGID>">
+			<form action="songquery.pl" method="get" id="<TMPL_VAR NAME=SONGID>">
 				<div class="row">
 					<div class="span5">
 						<strong>SONG TITLE: </strong><TMPL_VAR NAME=SONGTITLE>

@@ -4,25 +4,26 @@
 	************************************************
 	-->
 
-	<h3>Search Results for "<TMPL_VAR NAME=SEARCH_FOR>" in "<TMPL_VAR NAME=SEARCH_BY>"</h3>
-	
+
+	<h3>Search Results for "<TMPL_VAR NAME=SEARCH_FOR>"</h3>
 	<br />
 	<TMPL_LOOP NAME=SONG_INFO>
-		<div class="alert alert-info" onclick="javascript:document.getElementById('<TMPL_VAR NAME=ID>').submit();">
-			<form action="artistquery.pl" method="get" id="<TMPL_VAR NAME=ID>">
+		<div class="alert alert-info" onclick="javascript:document.getElementById('<TMPL_VAR NAME=SONGID>').submit();">
+			<form action="songquery.pl" method="get" id="<TMPL_VAR NAME=SONGID>">
 				<div class="row">
-					<div class="span6">
-						<strong>NAME: </strong><TMPL_VAR NAME=SORTNAME>
+					<div class="span7">
+						<strong>SONG TITLE: </strong><TMPL_VAR NAME=SONGTITLE>
 					</div>
 					<div class="span3">
-						<strong>RELEVANCE: </strong><TMPL_VAR NAME=SCORE>%
+						<strong>LENGTH: </strong><TMPL_VAR NAME=LENGTH>
 					</div>
 				</div>
-				<input type="hidden" name="id" value="<TMPL_VAR NAME=ID>"/>
-				<input type="hidden" name="name" value="<TMPL_VAR NAME=SORTNAME>"/>
+				<input type="hidden" name="id" value="<TMPL_VAR NAME=SONGID>"/>
+				<input type="hidden" name="name" value="<TMPL_VAR NAME=SONGTITLE>"/>
 			</form>
 		</div>
 	</TMPL_LOOP>
+<!--
 	
 	<form action="returnsearch.pl" method="get">
 		<input type="hidden" name="main-search-text" value="<TMPL_VAR NAME=SEARCH_FOR>"/>
@@ -31,7 +32,9 @@
 		<button type="submit" class="btn btn-primary">
 			More Results
 		</button>
-	</form>
+	</form>-->
+
+	
 
 	<!--
 	************************************************

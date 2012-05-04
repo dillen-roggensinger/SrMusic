@@ -4,25 +4,31 @@
 	************************************************
 	-->
 
-	<h3>Search Results for "<TMPL_VAR NAME=SEARCH_FOR>" in "<TMPL_VAR NAME=SEARCH_BY>"</h3>
-	
+
+	<h3>Search Results for "<TMPL_VAR NAME=SEARCH_FOR>"</h3>
 	<br />
 	<TMPL_LOOP NAME=SONG_INFO>
-		<div class="alert alert-info" onclick="javascript:document.getElementById('<TMPL_VAR NAME=ID>').submit();">
-			<form action="artistquery.pl" method="get" id="<TMPL_VAR NAME=ID>">
+		<div class="alert alert-info" onclick="javascript:document.getElementById('<TMPL_VAR NAME=ALBUMID>').submit();">
+			<form action="albumquery.pl" method="get" id="<TMPL_VAR NAME=ALBUMID>">
 				<div class="row">
-					<div class="span6">
-						<strong>NAME: </strong><TMPL_VAR NAME=SORTNAME>
+					<div class="span7">
+						<strong>ALBUM TITLE: </strong><TMPL_VAR NAME=ALBUMTITLE>
 					</div>
 					<div class="span3">
-						<strong>RELEVANCE: </strong><TMPL_VAR NAME=SCORE>%
+						<strong>ALBUM TYPE: </strong><TMPL_VAR NAME=ALBUMTYPE>
 					</div>
 				</div>
-				<input type="hidden" name="id" value="<TMPL_VAR NAME=ID>"/>
-				<input type="hidden" name="name" value="<TMPL_VAR NAME=SORTNAME>"/>
+				<div class="row">
+					<div class="span7">
+						<strong>RELEASE DATE: </strong><TMPL_VAR NAME=RELEASEDATE>
+					</div>
+				</div>
+				<input type="hidden" name="id" value="<TMPL_VAR NAME=ALBUMID>"/>
+				<input type="hidden" name="name" value="<TMPL_VAR NAME=ALBUMTITLE>"/>
 			</form>
 		</div>
 	</TMPL_LOOP>
+<!--
 	
 	<form action="returnsearch.pl" method="get">
 		<input type="hidden" name="main-search-text" value="<TMPL_VAR NAME=SEARCH_FOR>"/>
@@ -31,7 +37,9 @@
 		<button type="submit" class="btn btn-primary">
 			More Results
 		</button>
-	</form>
+	</form>-->
+
+	
 
 	<!--
 	************************************************
