@@ -202,4 +202,36 @@ sub get_albums {
 	return $ref;
 }
 
+sub get_release {
+	if (scalar @_ < 1) {
+		return {};
+	}
+	my $id = shift;
+	
+	my $url = MusicBrainzQuerier::formulate_browse_query(0, 'release', 'release-group', $id);
+	my $ref = MusicBrainzQuerier::search($url);
+	
+	#Just take one of the releases, they should all have the same amount of content
+	foreach (keys %$ref) {
+		return $_;
+	}
+}
+
+sub get_songs {
+	if (scalar @_ < 1) {
+		return {};
+	}
+	my $id = shift;
+	my $offset = shift;
+	if (!defined $offset) {
+		$offset = 0;
+	}
+
+	$id = get_release($id);
+	my $url = MusicBrainzQuerier::formulate_browse_query(0, 'recording', 'release', $id);
+	print "$url\n";
+	my $ref = MusicBrainzQuerier::search($url);
+	return $ref;
+}
+
 1;
