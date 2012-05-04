@@ -2,6 +2,7 @@ package MusicBrainzQuerier;
 
 use strict;
 use warnings;
+use Data::Dumper;
 use HTTP::Request;
 use XML::Simple;
 use URI::Escape;
@@ -22,11 +23,14 @@ sub formulate_search_query {
 	my $domain = shift;
 	my $type = shift;
 	my $value = URI::Escape::uri_escape(shift);
+	$value =~ s/%7C/|/g;
 	my $url = "http://www.musicbrainz.org/ws/2/$domain/?query=$type:$value";
 	while (@_) {
-		$url = "$url%20and%20" . shift(@_) . ":" . shift(@_);
+		$value = URI::Escape::uri_escape(shift(@_));
+		$value =~ s/%7C/|/g;
+		$url = "$url%20and%20" . shift(@_) . ":$value";
 	}
-	$url = $url . "&offset=$offset&limit=100";
+	$url = "$url&offset=$offset&limit=100";
 	return $url;
 }
 
@@ -47,6 +51,29 @@ sub formulate_lookup_query {
 			$url = "$url+$_"
 		}
 	}
+	return $url;
+}
+
+#Usage: <offset>, domain>, <type>, <value>, <type>, <value> ...
+#Example: 0, 'artist', 'alias', 'fred' <= searches for the alias fred under artists
+#Returns: A wellformed query url
+#Description: Creates a query string for the MusicBrainz XML based REST database
+sub formulate_browse_query {
+	if (scalar @_ < 4) {
+		return undef;
+	}
+	my $offset = shift;
+	my $domain = shift;
+	my $given_domain = shift;
+	my $id = shift;
+	my $url = "http://www.musicbrainz.org/ws/2/$domain?$given_domain=$id";
+	if (scalar @_ > 0) {
+		$url = "$url?inc=" . shift(@_);
+		foreach (@_) {
+			$url = "$url+$_"
+		}
+	}
+	$url = "$url&offset=$offset&limit=100";
 	return $url;
 }
 
@@ -113,13 +140,12 @@ sub lookup {
 	if (!defined($output)) {
 		return {};
 	}
-	if ($output =~ m/(<metadata.*?><(.*?) id.*<\/metadata>)/) {
+	if ($output =~ m/(<metadata.*?><(.*?) .*<\/metadata>)/) {
 		$output = $1;
 		$type = $2;
 	} else {
 		return {};
 	}
-	
 	
 	my $xs = XML::Simple->new();
 	my $ref = $xs->XMLin("$output");
