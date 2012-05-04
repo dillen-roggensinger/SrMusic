@@ -33,6 +33,16 @@ sub get_possible_artists {
 	do {	#Loop through all the offsets until no more results are found
 		my $url = MusicBrainzQuerier::formulate_search_query($offset, 'artist', 'alias', $artist);
 		$ref = MusicBrainzQuerier::search($url);
+		
+		if (defined $ref->{'id'}) {	#Single result, different data structure
+			return {
+				$ref->{'id'} => {
+					'sort-name' => $ref->{'sort-name'},
+					'ext:score' => $ref->{'ext:score'} 
+				}
+			};
+		}
+		
 		foreach (keys %{$ref}){
 			$artists_and_ids->{$ref->{$_}->{'id'}} = {
 				'sort-name' => $ref->{$_}->{'sort-name'},
@@ -95,6 +105,24 @@ sub get_possible_recordings {
 	do {	#Loop through all the offsets until no more results are found
 		my $url = MusicBrainzQuerier::formulate_search_query($offset, 'recording','recording',$name);
 		$ref = MusicBrainzQuerier::search($url);
+		
+		if (defined $ref->{'id'}) {	#Single result, different data structure
+			return {
+				$ref->{'id'} = {
+					'artists' => [$ref->{'artist-credit'}->{'name-credit'}],
+					'title' => $ref->{'title'},
+					'album' => {
+						'country' => $ref->{'release-list'}->{'release'}->{'country'},
+						'date' => $ref->{'release-list'}->{'release'}->{'date'},
+						'type' => $ref->{'release-list'}->{'release'}->{'release-group'}->{'type'},
+						'title' => $ref->{'release-list'}->{'release'}->{'title'},
+						'id' => $ref->{'release-list'}->{'release'}->{'id'},
+					},
+					'ext:score' => $ref->{'ext:score'}
+				}
+			};
+		}
+		
 		foreach my $id (keys %$ref){
 			$recordings_and_ids->{$id} = {
 				'artists' => [$ref->{$id}->{'artist-credit'}->{'name-credit'}],
@@ -160,6 +188,18 @@ sub get_possible_albums {
 	do {	#Loop through all the offsets until no more results are found
 		my $url = MusicBrainzQuerier::formulate_search_query($offset, 'release-group','release-group',$name,'type','album|compilation|soundtrack|live');
 		$ref = MusicBrainzQuerier::search($url);
+		
+		if (defined $ref->{'id'}) {	#Single result, different data structure
+			return {
+				$ref->{'id'} => {
+					'artists' => [$ref->{'artist-credit'}->{'name-credit'}],
+					'title' => $ref->{'title'},
+					'ext:score' => $ref->{'ext:score'},
+					'type' => $ref->{'type'}
+				}
+			};
+		}
+		
 		foreach my $id (keys %$ref){
 			$recordings_and_ids->{$id} = {
 				'artists' => [$ref->{$id}->{'artist-credit'}->{'name-credit'}],
@@ -211,6 +251,12 @@ sub get_albums {
 
 	my $url = MusicBrainzQuerier::formulate_browse_query($offset, 'release-group', 'artist', $id);
 	my $ref = MusicBrainzQuerier::search($url);
+	
+	if (defined $ref->{'id'}) {	#Single result
+		return {
+			$ref->{'id'} => $ref
+		};
+	}
 	return $ref;
 }
 
@@ -257,6 +303,12 @@ sub get_songs {
 	$id = get_release_id($id);
 	my $url = MusicBrainzQuerier::formulate_browse_query(0, 'recording', 'release', $id);
 	my $ref = MusicBrainzQuerier::search($url);
+	
+	if (defined $ref->{'id'}) {	#Single result
+		return {
+			$ref->{'id'} => $ref
+		};
+	}
 	return $ref;
 }
 
@@ -281,7 +333,6 @@ sub get_artists {
 	my $url = MusicBrainzQuerier::formulate_browse_query($offset, 'artist', 'recording', $id);
 	my $ref = MusicBrainzQuerier::search($url);
 	
-	#Just take one of the releases, they should all have the same amount of content
 	if (defined $ref->{'id'}) {	#Single result
 		return {
 			$ref->{'name'} => $ref
