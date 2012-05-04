@@ -95,6 +95,7 @@ sub get_possible_recordings {
 	do {	#Loop through all the offsets until no more results are found
 		my $url = MusicBrainzQuerier::formulate_search_query($offset, 'recording','recording',$name);
 		$ref = MusicBrainzQuerier::search($url);
+		print $url;
 		foreach my $id (keys %$ref){
 			$recordings_and_ids->{$id} = {
 				'artists' => [$ref->{$id}->{'artist-credit'}->{'name-credit'}],
@@ -172,6 +173,33 @@ sub get_possible_albums {
 	} while (scalar keys %$ref == 100 && $offset < $max);
 	
 	return $recordings_and_ids;
+}
+
+sub get_artist {
+	if (scalar @_ != 2) {
+		return {};
+	}
+	my $domain = shift;
+	my $id = shift;
+
+	my $url = MusicBrainzQuerier::formulate_browse_query(0, 'artist', $domain, $id);
+	my $ref = MusicBrainzQuerier::search($url);
+	return $ref->{'id'};
+}
+
+sub get_albums {
+	if (scalar @_ < 1) {
+		return {};
+	}
+	my $id = shift;
+	my $offset = shift;
+	if (!defined $offset) {
+		$offset = 0;
+	}
+
+	my $url = MusicBrainzQuerier::formulate_browse_query($offset, 'release-group', 'artist', $id);
+	my $ref = MusicBrainzQuerier::search($url);
+	return $ref;
 }
 
 1;
