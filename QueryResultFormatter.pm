@@ -178,7 +178,7 @@ sub get_possible_albums {
 #Example: 'recording' d0bd2a62-5dd8-49bf-ae51-8872a49184c0 <= Layla by Eric Clapton
 #Return: <release-group id>
 #Description: Gets the release-group id, given a domain and id
-sub get_artist {
+sub get_artist_id {
 	if (scalar @_ != 2) {
 		return {};
 	}
@@ -218,7 +218,7 @@ sub get_albums {
 #Example: 02c2b0c7-065d-38b4-8ac0-3391839f2418 <= Eric Clapton's Slow Hand
 #Return: <release id>
 #Description: Gets the release id, given a release group
-sub get_release {
+sub get_release_id {
 	if (scalar @_ < 1) {
 		return {};
 	}
@@ -254,9 +254,40 @@ sub get_songs {
 		$offset = 0;
 	}
 
-	$id = get_release($id);
+	$id = get_release_id($id);
 	my $url = MusicBrainzQuerier::formulate_browse_query(0, 'recording', 'release', $id);
 	my $ref = MusicBrainzQuerier::search($url);
+	return $ref;
+}
+
+#Usage: <recording id>
+#Example: d0bd2a62-5dd8-49bf-ae51-8872a49184c0 <= Layla by Eric Clapton
+#Return:
+#			id => {
+#				first-release-date =>
+#				type =>
+#				title =>
+#			}
+#Description: Gets all the artists that sung a song
+sub get_artists {
+	if (scalar @_ < 1) {
+		return {};
+	}
+	my $id = shift;
+	my $offset = shift;
+	if (!defined $offset) {
+		$offset = 0;
+	}
+
+	my $url = MusicBrainzQuerier::formulate_browse_query($offset, 'artist', 'recording', $id);
+	my $ref = MusicBrainzQuerier::search($url);
+	
+	#Just take one of the releases, they should all have the same amount of content
+	if (defined $ref->{'id'}) {	#Single result
+		return {
+			$ref->{'id'} => $ref
+		};
+	}
 	return $ref;
 }
 
