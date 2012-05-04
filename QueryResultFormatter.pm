@@ -263,10 +263,9 @@ sub get_songs {
 #Usage: <recording id>
 #Example: d0bd2a62-5dd8-49bf-ae51-8872a49184c0 <= Layla by Eric Clapton
 #Return:
-#			id => {
-#				first-release-date =>
-#				type =>
-#				title =>
+#			name => {
+#				all types of shit =>
+#				id =>
 #			}
 #Description: Gets all the artists that sung a song
 sub get_artists {
