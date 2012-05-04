@@ -10,6 +10,7 @@ use lib "../";
 use Helper;
 use QueryResultFormatter;
 
+#Function to format Artists data for Albums
 sub artist {
 	(my $search_for, my $name) = (@_);
 	
@@ -18,13 +19,16 @@ sub artist {
 	
 	$ref = QueryResultFormatter::get_albums($search_for);
 
+	#Errors
 	if ( !keys %{$ref} ) {
 		Helper::error('Null Results');
 		return;
 	}
+	#This is where we create the template
 	my $template =
 	  HTML::Template->new( filename => 'templates/artists_to_albums.html' );
 
+	#Injecting data into the template
 	$template->param( SEARCH_FOR => $name );	
 
 	foreach my $id ( keys %{$ref} ) {
@@ -48,6 +52,7 @@ sub artist {
 	print "Content-Type: text/html\n\n", $template->output;
 }
 
+#Creating a new CGI handler
 my $query      = new CGI;
 my $search_for = $query->param("id");
 my $name = $query->param("name");

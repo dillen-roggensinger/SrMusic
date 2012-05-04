@@ -10,6 +10,7 @@ use lib "../";
 use Helper;
 use QueryResultFormatter;
 
+#Similar to the other functions this creates a page of Albums to Songs
 sub songs {
 	(my $search_for, my $name) = (@_);
 	
@@ -17,14 +18,14 @@ sub songs {
 	my @songs;
 	
 	$ref = QueryResultFormatter::get_songs($search_for);
-
+	#error
 	if ( !keys %{$ref} ) {
 		Helper::error('Null Results');
 		return;
 	}
 	my $template =
 	  HTML::Template->new( filename => 'templates/albums_to_songs.html' );
-
+	#We only need the id number to query but its easier for the user to see the name
 	$template->param( SEARCH_FOR => $name );
 
 	foreach my $id ( keys %{$ref} ) {

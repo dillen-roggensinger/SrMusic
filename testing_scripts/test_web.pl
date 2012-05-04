@@ -8,6 +8,8 @@ use Data::Dumper;
 use lib "../";
 use QueryResultFormatter;
 
+#Transforming the data into a single hash per each search
+
 sub artists_test {
 	my $ref;
 	$ref = QueryResultFormatter::get_possible_artists('The Beatles');
