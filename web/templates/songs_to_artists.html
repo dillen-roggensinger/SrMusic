@@ -1,0 +1,50 @@
+<TMPL_INCLUDE NAME="header.html">
+
+	<!--
+	************************************************
+	-->
+	
+	<h3>Artists who have performed: "<TMPL_VAR NAME=SEARCH_FOR>"</h3>
+	<br />
+	<TMPL_LOOP NAME=SONG_INFO>
+		<div class="alert alert-info" onclick="javascript:document.getElementById('<TMPL_VAR NAME=ARTISTID>').submit();">
+			<form action="artistquery.pl" method="get" id="<TMPL_VAR NAME=ARTISTID>">
+				<div class="row">
+					<div class="span7">
+						<strong>ARTIST NAME: </strong><TMPL_VAR NAME=ARTISTNAME>
+					</div>
+					<div class="span3">
+						<strong>TYPE: </strong><TMPL_VAR NAME=TYPE>
+					</div>
+				</div>
+				<div class="row">
+					<div class="span7">
+						<strong>COUNTRY: </strong><TMPL_VAR NAME=COUNTRY>
+					</div>
+					<div class="span3">
+						<strong>GENDER: </strong><TMPL_VAR NAME=GENDER>
+					</div>
+				</div>
+				<input type="hidden" name="id" value="<TMPL_VAR NAME=ARTISTID>"/>
+				<input type="hidden" name="name" value="<TMPL_VAR NAME=ARTISTNAME>"/>
+			</form>
+		</div>
+	</TMPL_LOOP>
+<!--
+	
+	<form action="returnsearch.pl" method="get">
+		<input type="hidden" name="main-search-text" value="<TMPL_VAR NAME=SEARCH_FOR>"/>
+		<input type="hidden" name="main-search-by" value="<TMPL_VAR NAME=SEARCH_BY>"/>
+		<input type="hidden" name="more" value="<TMPL_VAR NAME=MORE>"/>
+		<button type="submit" class="btn btn-primary">
+			More Results
+		</button>
+	</form>-->
+
+	
+
+	<!--
+	************************************************
+	-->
+
+	<TMPL_INCLUDE NAME="footer.html">

@@ -93,10 +93,10 @@ sub song {
 			@songs,
 			{
 				SONGID     => $SONGID,
-				ALBUMID    => $ALBUMID,
+				#ALBUMID    => $ALBUMID,
 				ALBUMTITLE => $ALBUMTITLE,
 				ARTISTNAME => $ARTISTNAME,
-				ARTISTID   => $ARTISTID,
+				#ARTISTID   => $ARTISTID,
 				SONGTITLE  => $SONGTITLE,
 				SONGSCORE  => $SONGSCORE,
 			}

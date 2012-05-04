@@ -28,11 +28,15 @@ sub artist {
 	$template->param( SEARCH_FOR => $name );	
 
 	foreach my $id ( keys %{$ref} ) {
+		my $release = "N/A";
+		if (ref ($ref->{$id}{'first-release-date'}) eq 'HASH') {
+			$release = $ref->{$id}{'first-release-date'};
+		}
 		push(
 			@albums,
 			{
 				ALBUMID     => $id,
-				RELEASEDATE => $ref->{$id}{'first-release-date'},
+				RELEASEDATE => $release,
 				ALBUMTYPE   => $ref->{$id}{'type'},
 				ALBUMTITLE  => $ref->{$id}{'title'},
 			}

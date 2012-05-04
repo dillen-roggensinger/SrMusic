@@ -16,24 +16,39 @@ sub songs {
 	my $ref;
 	my @songs;
 	
-	$ref = QueryResultFormatter::get_songs($search_for);
+	$ref = QueryResultFormatter::get_artists($search_for);
 
 	if ( !keys %{$ref} ) {
 		Helper::error('Null Results');
 		return;
 	}
 	my $template =
-	  HTML::Template->new( filename => 'templates/albums_to_songs.html' );
+	  HTML::Template->new( filename => 'templates/songs_to_artists.html' );
 
 	$template->param( SEARCH_FOR => $name );
-
-	foreach my $id ( keys %{$ref} ) {
+	
+	foreach my $name ( keys %{$ref} ) {
+		my $artistid = $ref->{$name}{'id'};
+		my $country = "N/A";
+		if (exists $ref->{$name}{'country'}) {
+			$country = $ref->{$name}{'country'};
+		}
+		my $type = "N/A";
+		if (exists $ref->{$name}{'type'}) {
+			$type = $ref->{$name}{'type'};
+		}
+		my $gender = "N/A";
+		if (exists $ref->{$name}{'gender'}) {
+			$gender = $ref->{$name}{'gender'};
+		}
 		push(
 			@songs,
 			{
-				SONGID     => $id,
-				LENGTH => $ref->{$id}{'length'},
-				SONGTITLE  => $ref->{$id}{'title'},
+				ARTISTNAME     => $name,
+				ARTISTID => $artistid,
+				COUNTRY  => $country,
+				TYPE  => $type,
+				GENDER  => $gender,
 			}
 		);
 	}
