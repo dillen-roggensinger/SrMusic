@@ -7,7 +7,7 @@ use QueryResultFormatter;
 use Data::Dumper;
 use URI::Escape;
 
-#my $hash = QueryResultFormatter::get_possible_artists('neon trees');
+#my $hash = QueryResultFormatter::get_possible_artists('bruce');
 #print Dumper($hash);
 
 #my $hash = QueryResultFormatter::get_possible_recordings('layla');
@@ -21,7 +21,6 @@ use URI::Escape;
 
 #my $id = QueryResultFormatter::get_release('02c2b0c7-065d-38b4-8ac0-3391839f2418');
 #print Dumper($id);
-
 
 #my $hash = QueryResultFormatter::get_albums('618b6900-0618-4f1e-b835-bccb17f84294');
 #print Dumper($hash);
